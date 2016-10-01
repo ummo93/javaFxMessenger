@@ -10,18 +10,22 @@ public class Sender {
 
     private String username;
     private String password;
+    private String smtpHost;
+    private String smtpPort;
     private Properties props;
 
-    public Sender(String username, String password) {
+    public Sender(String username, String password, String smtpHost, String smtpPort) {
         this.username = username;
         this.password = password;
+        this.smtpHost = smtpHost; //For example smtp.gmail.com
+        this.smtpPort = smtpPort; //For example 465
 
         props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.host", this.smtpHost);
+        props.put("mail.smtp.socketFactory.port", this.smtpPort);
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.port", this.smtpPort);
     }
 
     public boolean send(String subject, String text, String fromEmail, String toEmail){

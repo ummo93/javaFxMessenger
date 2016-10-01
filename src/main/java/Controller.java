@@ -1,18 +1,12 @@
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.web.HTMLEditor;
-import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.*;
 
 public class Controller {
-
-    private static Sender sender = new Sender(Main.username, Main.pass);
 
     @FXML
     private AnchorPane anchorPane;
@@ -32,10 +26,16 @@ public class Controller {
     private TextField subjectInput;
     @FXML
     private Label userDefine;
+    @FXML
+    private TextField smtpHost;
+    @FXML
+    private TextField smtpPort;
 
     @FXML
     public void initialize() {
         userDefine.setText(Main.username);
+        smtpHost.setText(Main.smtpHost);
+        smtpPort.setText(Main.smtpPort);
     }
 
     @FXML
@@ -64,7 +64,15 @@ public class Controller {
     @FXML
     public void onClickSend() {
 
-        if ((subjectInput.getText().length() > 0) && (emailInput.getText().length() > 0)) {
+        if ((subjectInput.getText().length() > 0) && (emailInput.getText().length() > 0) && (!smtpHost.getText().equals("undefined") && (!smtpPort.getText().equals("undefined")))) {
+
+            Main.smtpHost = smtpHost.getText();
+            Main.smtpPort = smtpPort.getText();
+            Main.wipeConfig();
+            Main.updateConfig();
+
+            Sender sender = new Sender(Main.username, Main.pass, smtpHost.getText(), smtpPort.getText());
+
             if (sender.send(subjectInput.getText(),
                     htmlarea.getHtmlText().replace("contenteditable=\"true\"", "contenteditable=\"false\""),
                     "me",
@@ -124,24 +132,24 @@ public class Controller {
 
     public void onChangeUser() {
 
-        File config = new File("./config.ini");
-
         BufferedWriter bw = null;
 
         try {
             String[] credentials = Windows.auth();
             String configWrite = "name=" + credentials[0] + "\npass=" + credentials[1];
+            Main.wipeConfig();
             File newConfig = new File("./config.ini");
             bw = new BufferedWriter(new OutputStreamWriter(
                     new FileOutputStream(newConfig), "UTF8"));
             bw.write(configWrite);
             Main.username = credentials[0];
             Main.pass = credentials[1];
-            Controller.sender = new Sender(Main.username, Main.pass);
+            Main.smtpHost = smtpHost.getText();
+            Main.smtpPort = smtpPort.getText();
+            Main.updateConfig();
             userDefine.setText(Main.username);
 
         } catch (IOException e) {
-
             e.printStackTrace();
         } finally {
 
@@ -150,7 +158,8 @@ public class Controller {
             } catch (Exception e) {
             }
         }
-
+        Windows.success("Success!", "Programm will be restart that changes has been saved!", "Programm will be restart", anchorPane.getScene().getWindow());
+        ((Stage) anchorPane.getScene().getWindow()).close();
 
     }
 }

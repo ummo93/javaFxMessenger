@@ -9,25 +9,30 @@ public class Main extends Application {
 
     public static String username;
     public static String pass;
+    public static String smtpHost;
+    public static String smtpPort;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         //Проверка существует ли конфиг:
         File config = new File("./config.ini");
-        if(!config.exists()) {
+        if (!config.exists()) {
             //Если не существует, то записать
             BufferedWriter bw = null;
 
             try {
                 String[] credentials = Windows.auth();
-                String configWrite = "name=" + credentials[0] + "\npass=" + credentials[1];
+                String configWrite = "name=" + credentials[0] + "\npass=" + credentials[1] + "\nsmtpHost=undefined"
+                        + "\nsmtpPort=undefined";
                 File newConfig = new File("./config.ini");
                 bw = new BufferedWriter(new OutputStreamWriter(
                         new FileOutputStream(newConfig), "UTF8"));
                 bw.write(configWrite);
                 username = credentials[0];
                 pass = credentials[1];
+                smtpHost = "smtp."+credentials[0].split("@")[1];
+                smtpPort = "465";
 
             } catch (IOException e) {
 
@@ -48,7 +53,7 @@ public class Main extends Application {
                 br = new BufferedReader(new InputStreamReader
                         (new FileInputStream("./config.ini"), "UTF-8"));
 
-                String[] trimText = new String[2];
+                String[] trimText = new String[4];
                 int i = 0;
                 //Достаём логин и пароль из конфига
                 while ((line = br.readLine()) != null) {
@@ -58,6 +63,8 @@ public class Main extends Application {
 
                 username = trimText[0];
                 pass = trimText[1];
+                smtpHost = trimText[2];
+                smtpPort = trimText[3];
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -68,6 +75,7 @@ public class Main extends Application {
                 }
             }
         }
+
         //Инициализация компонентов оконного приложения
         Parent root = FXMLLoader.load(getClass().getResource("/layout.fxml")); // was java.sample.fxml
         primaryStage.setTitle("HTML Editor");
@@ -78,5 +86,34 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static void wipeConfig() {
+        File config = new File("./config.ini");
+        config.delete();
+    }
+
+    public static void updateConfig() {
+
+        BufferedWriter bw = null;
+
+        try {
+            String configWrite = "name=" + username + "\npass=" + pass + "\nsmtpHost=" + smtpHost
+                    + "\nsmtpPort=" + smtpPort;
+            File newConfig = new File("./config.ini");
+            bw = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(newConfig), "UTF8"));
+            bw.write(configWrite);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        } finally {
+
+            try {
+                bw.close();
+            } catch (Exception e) {
+            }
+        }
     }
 }
