@@ -22,11 +22,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="javaFXmessenger" />
+        <module name="javaFxMessenger" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="javaFXmessenger" target="1.8" />
+      <module name="javaFxMessenger" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

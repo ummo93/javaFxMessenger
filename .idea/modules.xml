@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/javaFXmessenger.iml" filepath="$PROJECT_DIR$/.idea/javaFXmessenger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/javaFxMessenger.iml" filepath="$PROJECT_DIR$/.idea/javaFxMessenger.iml" />
     </modules>
   </component>
 </project>
