@@ -12,9 +12,12 @@ public class Main extends Application {
     public static String smtpHost;
     public static String smtpPort;
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    public static void startApp(Stage stage) throws Exception{
         //Проверка существует ли конфиг:
         File config = new File("./config.ini");
         if (!config.exists()) {
@@ -77,15 +80,17 @@ public class Main extends Application {
         }
 
         //Инициализация компонентов оконного приложения
-        Parent root = FXMLLoader.load(getClass().getResource("/layout.fxml")); // was java.sample.fxml
-        primaryStage.setTitle("HTML Editor");
-        primaryStage.setScene(new Scene(root, 615, 375));
-        primaryStage.show();
+        Parent root = FXMLLoader.load(Main.class.getResource("/layout.fxml")); // was java.sample.fxml
+
+        stage.setTitle("HTML Editor");
+        stage.setScene(new Scene(root, 615, 375));
+        stage.show();
 
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        startApp(primaryStage);
     }
 
     public static void wipeConfig() {

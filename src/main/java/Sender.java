@@ -29,7 +29,7 @@ public class Sender {
     }
 
     public boolean send(String subject, String text, String fromEmail, String toEmail){
-        Session session = Session.getDefaultInstance(props, new Authenticator() {
+        Session session = Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
@@ -50,10 +50,21 @@ public class Sender {
 
             //отправляем сообщение
             Transport.send(message);
+
+            //Освобождаем память
+            message = null;
+            session = null;
+            this.username = null;
+            this.password = null;
+            this.smtpHost = null;
+            this.smtpPort = null;
+            this.props = null;
+
         } catch (MessagingException e) {
             System.out.println(e);
             return false;
         }
         return true;
     }
+
 }

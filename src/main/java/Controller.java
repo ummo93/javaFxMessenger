@@ -64,7 +64,7 @@ public class Controller {
     @FXML
     public void onClickSend() {
 
-        if ((subjectInput.getText().length() > 0) && (emailInput.getText().length() > 0) && (!smtpHost.getText().equals("undefined") && (!smtpPort.getText().equals("undefined")))) {
+        if ((subjectInput.getText().length() > 0) && (emailInput.getText().length() > 0)) {
 
             Main.smtpHost = smtpHost.getText();
             Main.smtpPort = smtpPort.getText();
@@ -88,6 +88,7 @@ public class Controller {
                         anchorPane.getScene().getWindow()
                 );
             }
+            sender = null;
 
         } else {
 
@@ -132,34 +133,30 @@ public class Controller {
 
     public void onChangeUser() {
 
-        BufferedWriter bw = null;
+        String[] credentials = Windows.auth();
+
+        Main.wipeConfig();
+
+        Main.username = credentials[0];
+        Main.pass = credentials[1];
+        Main.smtpHost = "smtp."+credentials[0].split("@")[1];
+        Main.smtpPort = "465";
+
+        Main.updateConfig();
+
+        Windows.success("Success!", "Programm will be restart that changes has been saved!", "Programm will be restart", anchorPane.getScene().getWindow());
+
+        //Program has been close
+        ((Stage) anchorPane.getScene().getWindow()).close();
+
+        //Garbage collector
+        Runtime.getRuntime().gc();
 
         try {
-            String[] credentials = Windows.auth();
-            String configWrite = "name=" + credentials[0] + "\npass=" + credentials[1];
-            Main.wipeConfig();
-            File newConfig = new File("./config.ini");
-            bw = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(newConfig), "UTF8"));
-            bw.write(configWrite);
-            Main.username = credentials[0];
-            Main.pass = credentials[1];
-            Main.smtpHost = smtpHost.getText();
-            Main.smtpPort = smtpPort.getText();
-            Main.updateConfig();
-            userDefine.setText(Main.username);
-
-        } catch (IOException e) {
+            Main.startApp(((Stage) anchorPane.getScene().getWindow()));
+        } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-
-            try {
-                bw.close();
-            } catch (Exception e) {
-            }
         }
-        Windows.success("Success!", "Programm will be restart that changes has been saved!", "Programm will be restart", anchorPane.getScene().getWindow());
-        ((Stage) anchorPane.getScene().getWindow()).close();
 
     }
 }
