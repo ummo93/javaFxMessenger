@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -7,12 +9,15 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.web.*?>
 <?import javafx.scene.web.HTMLEditor?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="442.0" minWidth="876.0" prefHeight="442.0" prefWidth="876.0" xmlns="http://javafx.com/javafx/8.0.102-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<AnchorPane fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="442.0" minWidth="876.0" prefHeight="442.0" prefWidth="876.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="Controller">
   <children>
-    <SplitPane dividerPositions="0.9954233409610984" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <SplitPane dividerPositions="0.7791762013729977" focusTraversable="true" orientation="HORIZONTAL" prefHeight="-1.0" prefWidth="-1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <items>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="-1.0">
           <children>
@@ -29,19 +34,39 @@
             <TextField id="" fx:id="smtpHost" layoutY="244.0" prefWidth="150.0" promptText="smtp.gmail.com" text="" AnchorPane.rightAnchor="14.0" />
             <Label layoutY="38.0" text="You are:" AnchorPane.rightAnchor="14.0" />
             <Label fx:id="userDefine" layoutY="64.0" text="Undefined" textFill="#00a3ff" underline="true" wrapText="false" AnchorPane.rightAnchor="14.0" />
-            <Label layoutX="109.0" layoutY="282.0" text="SMTP Port" AnchorPane.rightAnchor="14.0" />
-            <TextField id="" fx:id="smtpPort" layoutX="30.0" layoutY="306.0" prefWidth="150.0" promptText="Usually - 465" text="" AnchorPane.rightAnchor="14.0" />
+            <Label layoutY="282.0" text="SMTP Port" AnchorPane.rightAnchor="14.0" />
+            <TextField id="" fx:id="smtpPort" layoutY="306.0" prefWidth="150.0" promptText="Usually - 465" text="" AnchorPane.rightAnchor="14.0" />
+            <ImageView id="" fitHeight="35.25" fitWidth="47.0" layoutY="32.0" onMouseClicked="#changeIncomingScene" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="86.0">
+              <image>
+                <Image url="@email.png" />
+              </image>
+            </ImageView>
+          </children>
+        </AnchorPane>
+      </items>
+    </SplitPane>
+    <SplitPane fx:id="splitIncoming" dividerPositions="0.7791762013729977" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <items>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="-1.0" visible="true">
+          <children>
+            <Button layoutX="39.0" layoutY="32.0" mnemonicParsing="false" onMouseClicked="#backToMainScene" text="Back" />
+            <TextArea fx:id="messageView" disable="false" editable="false" prefHeight="369.0" prefWidth="685.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-6.0" AnchorPane.topAnchor="71.0" />
+          </children>
+        </AnchorPane>
+        <AnchorPane maxWidth="190.0" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="-1.0" visible="true">
+          <children>
+            <ListView fx:id="incomingTree" prefHeight="421.0" prefWidth="190.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="19.0" />
           </children>
         </AnchorPane>
       </items>
     </SplitPane>
     <MenuBar maxHeight="24.0" minHeight="24.0" prefHeight="624.0" prefWidth="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <menus>
-        <Menu fx:id="file" mnemonicParsing="false" text="File">
+        <Menu mnemonicParsing="false" text="File" fx:id="file">
           <items>
             <MenuItem mnemonicParsing="false" onAction="#onClickSend" text="To send" />
-            <MenuItem fx:id="save" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
-            <MenuItem fx:id="close" mnemonicParsing="false" onAction="#onClickClose" text="Close" />
+            <MenuItem mnemonicParsing="false" onAction="#onClickSave" text="Save" fx:id="save" />
+            <MenuItem mnemonicParsing="false" onAction="#onClickClose" text="Close" fx:id="close" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Accaunt">
@@ -49,10 +74,10 @@
             <MenuItem mnemonicParsing="false" onAction="#onChangeUser" text="Change user" />
           </items>
         </Menu>
-        <Menu fx:id="help" mnemonicParsing="false" text="Help">
+        <Menu mnemonicParsing="false" text="Help" fx:id="help">
           <items>
             <MenuItem mnemonicParsing="false" onAction="#onHelpClick" text="About" />
-            <MenuItem fx:id="helpReturn" mnemonicParsing="false" onAction="#onReturnClick" text="Return" visible="false" />
+            <MenuItem mnemonicParsing="false" onAction="#onReturnClick" text="Return" visible="false" fx:id="helpReturn" />
           </items>
         </Menu>
       </menus>

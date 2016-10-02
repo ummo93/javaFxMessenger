@@ -1,3 +1,6 @@
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -30,6 +33,14 @@ public class Controller {
     private TextField smtpHost;
     @FXML
     private TextField smtpPort;
+    @FXML
+    private SplitPane splitIncoming;
+    @FXML
+    private ListView incomingTree;
+    @FXML
+    private TextArea messageView;
+
+    private ObservableList<MailSubject> messageList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -101,7 +112,6 @@ public class Controller {
 
         }
 
-
     }
 
     @FXML
@@ -158,5 +168,56 @@ public class Controller {
             e.printStackTrace();
         }
 
+    }
+
+    public void changeIncomingScene(Event event) {
+
+        splitIncoming.setVisible(true);
+        Incoming loadIncoming = new Incoming(Main.username, Main.pass, "imap."+Main.username.split("@")[1]);
+        try {
+
+            this.messageList = loadIncoming.getMessage();
+
+            ObservableList<String> listOfSubjects = FXCollections.observableArrayList();
+
+            for(int i = 0; i<messageList.size(); i++){
+                listOfSubjects.add(messageList.get(i).getMessages()[0]);
+            }
+            incomingTree.setItems(listOfSubjects);
+
+            //Выводим содержимое мыла в текстовую область
+            incomingTree.setOnMouseClicked(e -> {
+
+                int flag = getMatches(e.getTarget().toString().split("\"")[1], listOfSubjects);
+
+                if(flag != -1){
+                    messageView.setText(this.messageList.get(getMatches(e.getTarget().toString().split("\"")[1], listOfSubjects)).getMessages()[1]);
+
+                }
+            });
+
+        }catch(Exception e){
+            Windows.alert(
+                    "Program exception",
+                    "Program exception",
+                    e.toString(),
+                    anchorPane.getScene().getWindow()
+            );
+        }
+    }
+
+    public void backToMainScene(Event event) {
+        splitIncoming.setVisible(false);
+    }
+
+
+    public int getMatches(String string, ObservableList<String> array){
+        int index = -1;
+        for (int i = 0; i<array.size(); i++){
+            if(string.equals(array.get(i))){
+                index = i;
+            }
+        }
+        return index;
     }
 }

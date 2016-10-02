@@ -17,7 +17,7 @@ public class Main extends Application {
         launch(args);
     }
 
-    public static void startApp(Stage stage) throws Exception{
+    public static void startApp(Stage stage) throws Exception {
         //Проверка существует ли конфиг:
         File config = new File("./config.ini");
         if (!config.exists()) {
@@ -83,7 +83,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(Main.class.getResource("/layout.fxml")); // was java.sample.fxml
 
         stage.setTitle("HTML Editor");
-        stage.setScene(new Scene(root, 615, 375));
+        stage.setScene(new Scene(root, 900, 400));
         stage.show();
 
     }
@@ -121,4 +121,5 @@ public class Main extends Application {
             }
         }
     }
+
 }
