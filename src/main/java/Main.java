@@ -6,7 +6,7 @@ import javafx.stage.*;
 import java.io.*;
 
 public class Main extends Application {
-
+//TODO https://ru.wikipedia.org/wiki/JavaMail
     public static String username;
     public static String pass;
     public static String smtpHost;

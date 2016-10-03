@@ -1,5 +1,6 @@
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
 import javax.mail.*;
 import java.util.Properties;
 
@@ -11,7 +12,7 @@ public class Incoming {
     private String pass;
     private String host;
 
-    public Incoming(String user, String pass, String host){
+    public Incoming(String user, String pass, String host) {
 
         this.user = user;
         this.pass = pass;
@@ -44,9 +45,19 @@ public class Incoming {
 
         int messageCount = inbox.getMessageCount();
 
-        for(int i = messageCount; i > messageCount - 10; i--){
+        for (int i = messageCount; i > messageCount - 10; i--) {
+            try {
 
-            latestSubject.add(new MailSubject(inbox.getMessage(i).getSubject(), (((Multipart) inbox.getMessage(i).getContent()).getBodyPart(0).getContent().toString())));
+                Message m = inbox.getMessage(i - (messageCount - 10));
+                Multipart mp = (Multipart) m.getContent();
+                BodyPart bp = mp.getBodyPart(0);
+
+                latestSubject.add(new MailSubject(m.getSubject(), bp.getContent().toString()));
+
+            } catch (ClassCastException e) {
+                System.out.println(e);
+            }
+
         }
         return latestSubject;
     }

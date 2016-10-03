@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.HTMLEditor;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.*;
@@ -38,7 +40,7 @@ public class Controller {
     @FXML
     private ListView incomingTree;
     @FXML
-    private TextArea messageView;
+    private WebView mailView;
 
     private ObservableList<MailSubject> messageList = FXCollections.observableArrayList();
 
@@ -172,6 +174,9 @@ public class Controller {
 
     public void changeIncomingScene(Event event) {
 
+
+        WebEngine browser = mailView.getEngine();
+
         splitIncoming.setVisible(true);
         Incoming loadIncoming = new Incoming(Main.username, Main.pass, "imap."+Main.username.split("@")[1]);
         try {
@@ -191,8 +196,7 @@ public class Controller {
                 int flag = getMatches(e.getTarget().toString().split("\"")[1], listOfSubjects);
 
                 if(flag != -1){
-                    messageView.setText(this.messageList.get(getMatches(e.getTarget().toString().split("\"")[1], listOfSubjects)).getMessages()[1]);
-
+                    browser.loadContent(this.messageList.get(getMatches(e.getTarget().toString().split("\"")[1], listOfSubjects)).getMessages()[1]);
                 }
             });
 
